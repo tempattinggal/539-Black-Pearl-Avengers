@@ -1,0 +1,2265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLACK PEARL - Call of Dragon Alliance</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #0a0a0a;
+            --secondary: #1a1a1a;
+            --accent: #f5a623;
+            --accent-light: #ffb74d;
+            --text: #ffffff;
+            --text-secondary: #a0a0a0;
+            --border: #333333;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background-color: var(--primary);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            font-weight: 400;
+            overflow-x: hidden;
+        }
+        
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 2rem 1.5rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(245, 166, 35, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(245, 166, 35, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 166, 35, 0); }
+        }
+        
+        .logo-inner {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo-dragon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+        
+        .alliance-name {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+            text-shadow: 0 0 10px rgba(245, 166, 35, 0.5);
+        }
+        
+        .alliance-tagline {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+        }
+        
+        .server-info {
+            display: inline-block;
+            background: var(--secondary);
+            color: var(--text);
+            padding: 0.5rem 1.25rem;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            border: 1px solid var(--border);
+        }
+        
+        .language-selector {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+        }
+        
+        .language-btn {
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+        
+        .language-btn:hover {
+            background: var(--accent);
+            color: var(--primary);
+        }
+        
+        .admin-status {
+            position: absolute;
+            top: 1.5rem;
+            right: 10rem;
+            background: var(--accent);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: none;
+        }
+        
+        /* Container & Tabs */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        .tabs {
+            display: flex;
+            background: var(--secondary);
+            border-bottom: 1px solid var(--border);
+            margin-top: 2rem;
+            overflow-x: auto;
+        }
+        
+        .tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            background: var(--secondary);
+            border: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: all 0.2s ease;
+            position: relative;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+        
+        .tab.active {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        .tab.active::after {
+            content: "";
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent);
+        }
+        
+        .tab:hover:not(.active) {
+            color: var(--text);
+            background: rgba(245, 166, 35, 0.1);
+        }
+        
+        .tab-content {
+            display: none;
+            background: var(--primary);
+            padding: 2rem 0;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Card Styles */
+        .card {
+            background: var(--secondary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Home Page Styles */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .slider {
+            display: flex;
+            transition: transform 0.5s ease;
+            height: 100%;
+        }
+        
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+        
+        .slider-nav {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+        
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .slider-dot.active {
+            background: var(--accent);
+        }
+        
+        .slider-upload {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: none;
+        }
+        
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            display: none;
+        }
+        
+        .upload-area.dragover {
+            border-color: var(--accent);
+            background: rgba(245, 166, 35, 0.1);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, var(--secondary) 0%, #2a2a2a 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--accent);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .gallery-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            height: 300px;
+            background: var(--secondary);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .gallery-image {
+            width: 100%;
+            height: 70%;
+            object-fit: cover;
+        }
+        
+        .gallery-info {
+            padding: 1rem;
+        }
+        
+        .gallery-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+        
+        .gallery-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Player Tab Styles */
+        .player-form-container {
+            display: none;
+        }
+        
+        .player-form-container.admin-visible {
+            display: block;
+        }
+        
+        .search-container {
+            display: flex;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+        
+        .search-container input {
+            flex: 1;
+        }
+        
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: var(--secondary);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        
+        .filter-group {
+            flex: 1;
+            min-width: 180px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        th {
+            background: var(--secondary);
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        tr:hover {
+            background: rgba(245, 166, 35, 0.05);
+        }
+        
+        .player-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .player-row {
+            display: flex;
+            align-items: center;
+        }
+        
+        .country-flag {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 8px;
+            background: var(--secondary);
+            text-align: center;
+            line-height: 24px;
+            font-size: 12px;
+        }
+        
+        /* Player Stats Tab */
+        .player-stats-container {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+        
+        .player-search {
+            flex: 1;
+        }
+        
+        .player-detail {
+            flex: 2;
+            background: var(--secondary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+        
+        .player-detail-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .player-detail-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 2rem;
+            overflow: hidden;
+        }
+        
+        .player-detail-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .player-detail-info {
+            flex: 1;
+        }
+        
+        .player-detail-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+        
+        .player-detail-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .player-detail-stat {
+            text-align: center;
+            padding: 1rem;
+            background: var(--primary);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        
+        .player-detail-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+        
+        .player-detail-stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+            font-size: 0.875rem;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            color: var(--text);
+            transition: all 0.2s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.1);
+        }
+        
+        button {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+        
+        button:hover {
+            background: var(--accent-light);
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #059669;
+        }
+        
+        .btn-secondary {
+            background: var(--secondary);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            background: #2a2a2a;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background: var(--secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+        
+        /* Map Styles */
+        .map-container {
+            width: 100%;
+            height: 500px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 1.5rem;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .player-stats-container {
+                flex-direction: column;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            
+            .filters {
+                flex-direction: column;
+            }
+            
+            .admin-status {
+                position: static;
+                margin-bottom: 1rem;
+                display: none;
+            }
+            
+            .language-selector {
+                position: static;
+                margin-bottom: 1rem;
+                display: flex;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                padding: 1.5rem 1rem 1rem;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="admin-status" id="adminStatus">
+            <i class="fas fa-user-shield"></i> Logged in as Administrator
+        </div>
+        
+        <div class="language-selector">
+            <button class="language-btn" id="languageBtn">
+                <i class="fas fa-globe"></i> <span id="currentLanguage">EN</span>
+            </button>
+        </div>
+        
+        <div class="logo-container">
+            <div class="logo">
+                <div class="logo-inner">
+                    <div class="logo-dragon">
+                        <i class="fas fa-dragon"></i>
+                    </div>
+                </div>
+            </div>
+            <h1 class="alliance-name">BLACK PEARL</h1>
+        </div>
+        
+        <p class="alliance-tagline">Elite Call of Dragon Alliance - Server 539</p>
+        <div class="server-info">
+            <i class="fas fa-server"></i> Server 539
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- Tabs Navigation -->
+        <div class="tabs">
+            <button class="tab active" data-tab="home">
+                <i class="fas fa-home"></i> <span data-i18n="home">Home</span>
+            </button>
+            <button class="tab" data-tab="players">
+                <i class="fas fa-users"></i> <span data-i18n="players">Players</span>
+            </button>
+            <button class="tab" data-tab="stats">
+                <i class="fas fa-chart-line"></i> <span data-i18n="playerStats">Player Stats</span>
+            </button>
+            <button class="tab" data-tab="merrit">
+                <i class="fas fa-trophy"></i> <span data-i18n="meritRank">Merit Rank</span>
+            </button>
+            <button class="tab" data-tab="worldmap">
+                <i class="fas fa-globe-americas"></i> <span data-i18n="worldMap">World Map</span>
+            </button>
+        </div>
+        
+        <!-- Home Tab -->
+        <div class="tab-content active" id="home">
+            <!-- Image Slider -->
+            <div class="card">
+                <h2><i class="fas fa-images"></i> <span data-i18n="allianceGallery">Alliance Gallery</span></h2>
+                <div class="slider-container">
+                    <div class="slider" id="imageSlider">
+                        <!-- Slides will be added dynamically -->
+                    </div>
+                    <div class="slider-nav" id="sliderNav">
+                        <!-- Navigation dots will be added dynamically -->
+                    </div>
+                    <button class="slider-upload btn-secondary" id="sliderUploadBtn" style="display: none;">
+                        <i class="fas fa-upload"></i> <span data-i18n="uploadImages">Upload Images</span>
+                    </button>
+                </div>
+                
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; margin-bottom: 1rem; color: var(--accent);"></i>
+                    <h3 data-i18n="dragDrop">Drag & Drop to Upload</h3>
+                    <p data-i18n="maxSize">Maximum file size: 10MB</p>
+                    <button class="btn-secondary" id="browseFilesBtn" style="margin-top: 1rem;">
+                        <i class="fas fa-folder-open"></i> <span data-i18n="browseFiles">Browse Files</span>
+                    </button>
+                    <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
+                </div>
+            </div>
+            
+            <!-- Alliance Statistics -->
+            <div class="card">
+                <h2><i class="fas fa-chart-bar"></i> <span data-i18n="allianceStatistics">Alliance Statistics</span></h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalPower">0</div>
+                        <div class="stat-label" data-i18n="totalPower">Total Power</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalPlayers">0</div>
+                        <div class="stat-label" data-i18n="totalPlayers">Total Players</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalMerit">0</div>
+                        <div class="stat-label" data-i18n="totalMerit">Total Merit</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="meritRatio">0%</div>
+                        <div class="stat-label" data-i18n="meritRatio">Merit Ratio</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Player Gallery -->
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                    <h2><i class="fas fa-users"></i> <span data-i18n="playerGallery">Player Gallery</span></h2>
+                    <div>
+                        <button id="loginBtn" class="btn-secondary">
+                            <i class="fas fa-user-shield"></i> <span data-i18n="adminLogin">Admin Login</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="gallery-grid" id="playerGallery">
+                    <!-- Player cards will be inserted here by JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Players Tab -->
+        <div class="tab-content" id="players">
+            <!-- Add Player Form (Admin Only) -->
+            <div class="card player-form-container" id="playerFormContainer">
+                <h2><i class="fas fa-plus-circle"></i> <span data-i18n="addNewPlayer">Add New Player</span></h2>
+                <form id="playerForm">
+                    <div class="form-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem;">
+                        <div class="form-group">
+                            <label for="playerName" data-i18n="playerName">Player Name</label>
+                            <input type="text" id="playerName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="playerLevel" data-i18n="level">Level</label>
+                            <input type="number" id="playerLevel" min="1" max="50" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="playerPower" data-i18n="power">Power</label>
+                            <input type="number" id="playerPower" min="0" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="playerFaction" data-i18n="faction">Faction</label>
+                            <select id="playerFaction" required>
+                                <option value="">Select Faction</option>
+                                <option value="Wilderberg">Wilderberg</option>
+                                <option value="League of Order">League of Order</option>
+                                <option value="Springwardens">Springwardens</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="playerRoleplay" data-i18n="roleplay">Roleplay</label>
+                            <select id="playerRoleplay" required>
+                                <option value="">Select Roleplay</option>
+                                <option value="ALL ROLEPLAY">ALL ROLEPLAY</option>
+                                <option value="INFANTRY">INFANTRY</option>
+                                <option value="CAVALARY">CAVALARY</option>
+                                <option value="ARCHER">ARCHER</option>
+                                <option value="MAGE">MAGE</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="playerCountry" data-i18n="country">Country</label>
+                            <input type="text" id="playerCountry" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit"><i class="fas fa-user-plus"></i> <span data-i18n="addPlayer">Add Player</span></button>
+                </form>
+            </div>
+            
+            <!-- Player List -->
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                    <h2><i class="fas fa-list"></i> <span data-i18n="playerList">Player List</span></h2>
+                    <button id="importBtn" class="btn-secondary" style="display: none;">
+                        <i class="fas fa-file-import"></i> <span data-i18n="importData">Import Data</span>
+                    </button>
+                </div>
+                
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search by ID or name..." data-i18n-ph="searchPlaceholder">
+                    <button id="searchBtn"><i class="fas fa-search"></i> <span data-i18n="search">Search</span></button>
+                </div>
+                
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="countryFilter" data-i18n="filterByCountry">Filter by Country</label>
+                        <select id="countryFilter">
+                            <option value="">All Countries</option>
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="roleplayFilter" data-i18n="filterByRoleplay">Filter by Roleplay</label>
+                        <select id="roleplayFilter">
+                            <option value="">All Roleplay</option>
+                            <option value="ALL ROLEPLAY">ALL ROLEPLAY</option>
+                            <option value="INFANTRY">INFANTRY</option>
+                            <option value="CAVALARY">CAVALARY</option>
+                            <option value="ARCHER">ARCHER</option>
+                            <option value="MAGE">MAGE</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="sortBy" data-i18n="sortBy">Sort By</label>
+                        <select id="sortBy">
+                            <option value="power">Power (Highest)</option>
+                            <option value="level">Level (Highest)</option>
+                            <option value="name">Name (A-Z)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <table id="playersTable">
+                    <thead>
+                        <tr>
+                            <th data-i18n="player">Player</th>
+                            <th data-i18n="level">Level</th>
+                            <th data-i18n="power">Power</th>
+                            <th data-i18n="faction">Faction</th>
+                            <th data-i18n="roleplay">Roleplay</th>
+                            <th data-i18n="country">Country</th>
+                            <th id="actionsHeader" style="display: none;" data-i18n="actions">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="playersList">
+                        <!-- Player data will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Player Stats Tab -->
+        <div class="tab-content" id="stats">
+            <div class="card">
+                <h2><i class="fas fa-chart-line"></i> <span data-i18n="individualPlayerStats">Individual Player Statistics</span></h2>
+                <p data-i18n="searchPlayerDescription">Search for a player to view detailed statistics and performance metrics</p>
+                
+                <div class="search-container">
+                    <input type="text" id="playerSearch" placeholder="Enter player ID or name..." data-i18n-ph="searchPlayerPlaceholder">
+                    <button id="searchPlayerBtn"><i class="fas fa-search"></i> <span data-i18n="searchPlayer">Search Player</span></button>
+                </div>
+                
+                <div id="playerStats">
+                    <!-- Default top player stats will be displayed here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Merit Rank Tab -->
+        <div class="tab-content" id="merrit">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                    <h2><i class="fas fa-trophy"></i> <span data-i18n="meritRanking">Merit Ranking</span></h2>
+                    <button id="updateMeritBtn" class="btn-secondary" style="display: none;">
+                        <i class="fas fa-edit"></i> <span data-i18n="updateMerit">Update Merit</span>
+                    </button>
+                </div>
+                <p data-i18n="meritDescription">Player rankings based on merit points. Updated each season.</p>
+                
+                <div class="search-container">
+                    <input type="text" id="meritSearch" placeholder="Search players..." data-i18n-ph="searchMeritPlaceholder">
+                    <button id="meritSearchBtn"><i class="fas fa-search"></i> <span data-i18n="search">Search</span></button>
+                </div>
+                
+                <table id="meritTable">
+                    <thead>
+                        <tr>
+                            <th data-i18n="rank">Rank</th>
+                            <th data-i18n="player">Player</th>
+                            <th data-i18n="meritS7">Merit S7</th>
+                            <th data-i18n="meritS8">Merit S8</th>
+                            <th data-i18n="totalMerit">Total Merit</th>
+                            <th id="meritActionsHeader" style="display: none;" data-i18n="actions">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="meritList">
+                        <!-- Merit data will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- World Map Tab -->
+        <div class="tab-content" id="worldmap">
+            <div class="card">
+                <h2><i class="fas fa-globe-americas"></i> <span data-i18n="playerWorldDistribution">Player World Distribution</span></h2>
+                <p data-i18n="mapDescription">Click on a country to view players from that region</p>
+                
+                <div class="map-container" id="map"></div>
+                
+                <div id="countryPlayers" style="margin-top: 1.5rem; display: none;">
+                    <h3><span data-i18n="playersFrom">Players from</span> <span id="selectedCountry">Country</span></h3>
+                    <div id="countryPlayersList">
+                        <!-- Players from selected country will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeLoginModal">&times;</button>
+            <div class="form-header">
+                <h2><i class="fas fa-lock"></i> <span data-i18n="adminLogin">Administrator Login</span></h2>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username" data-i18n="username">Username</label>
+                    <input type="text" id="username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" data-i18n="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button type="submit" class="btn-success">
+                        <i class="fas fa-sign-in-alt"></i> <span data-i18n="login">Login</span>
+                    </button>
+                    <button type="button" class="btn-danger" id="cancelLogin">Cancel</button>
+                </div>
+            </form>
+            <div style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-secondary);">
+                <p><strong data-i18n="defaultLogin">Default login:</strong> admin / blackpearl539</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div class="modal" id="importModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeImportModal">&times;</button>
+            <div class="form-header">
+                <h2><i class="fas fa-file-import"></i> <span data-i18n="importData">Import Player Data</span></h2>
+            </div>
+            <p data-i18n="importDescription">Upload a CSV or JSON file to import player data. Existing data will be replaced.</p>
+            
+            <div class="form-group">
+                <label for="importFileType" data-i18n="fileType">File Type</label>
+                <select id="importFileType">
+                    <option value="csv">CSV</option>
+                    <option value="json">JSON</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="importFile" data-i18n="selectFile">Select File</label>
+                <input type="file" id="importFile" accept=".csv,.json">
+            </div>
+            
+            <div style="margin-top: 1.5rem;">
+                <button id="processImportBtn" class="btn-success">
+                    <i class="fas fa-upload"></i> <span data-i18n="processImport">Process Import</span>
+                </button>
+                <button id="cancelImportBtn" class="btn-danger">
+                    <i class="fas fa-times"></i> <span data-i18n="cancel">Cancel</span>
+                </button>
+            </div>
+            
+            <div style="margin-top: 1.5rem; padding: 1rem; background: var(--primary); border-radius: 8px;">
+                <h4 data-i18n="csvFormat">CSV Format</h4>
+                <p data-i18n="csvFormatDescription">CSV files should have the following columns: id,name,level,power,faction,roleplay,country,merritS7,merritS8,death</p>
+                <pre style="font-size: 0.75rem; margin-top: 0.5rem;">
+id,name,level,power,faction,roleplay,country,merritS7,merritS8,death
+10369382,"ARES ᵃʳᵉˢ",45,306858231,Wilderberg,ALL ROLEPLAY,South Korea,72840501,45000000,4844128
+10078833,"카이레이",43,245455864,League of Order,ALL ROLEPLAY,South Korea,27342269,32000000,5331924
+                </pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Player Detail Modal -->
+    <div class="modal" id="playerDetailModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closePlayerDetailModal">&times;</button>
+            <div id="playerDetailContent">
+                <!-- Player details will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer style="text-align: center; padding: 2rem; background: var(--secondary); color: var(--text-secondary); margin-top: 3rem; border-top: 1px solid var(--border);">
+        <p>BLACK PEARL - Server 539 | Call of Dragon Alliance Database</p>
+        <p>© 2023 - Created with <i class="fas fa-heart" style="color: var(--accent);"></i> for the BLACK PEARL community</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Data aktual dari CSV BLACK PEARL
+        let players = [
+            { 
+                id: 10369382, 
+                name: "ARES ᵃʳᵉˢ", 
+                level: 45, 
+                power: 306858231, 
+                faction: "Wilderberg", 
+                roleplay: "ALL ROLEPLAY", 
+                country: "South Korea", 
+                merritS7: 72840501, 
+                merritS8: 45000000,
+                death: 4844128,
+                avatar: null
+            },
+            { 
+                id: 10078833, 
+                name: "카이레이", 
+                level: 43, 
+                power: 245455864, 
+                faction: "League of Order", 
+                roleplay: "ALL ROLEPLAY", 
+                country: "South Korea", 
+                merritS7: 27342269, 
+                merritS8: 32000000,
+                death: 5331924,
+                avatar: null
+            },
+            { 
+                id: 10094818, 
+                name: "ᴮᴾ덕배야", 
+                level: 42, 
+                power: 229716824, 
+                faction: "Springwardens", 
+                roleplay: "ALL ROLEPLAY", 
+                country: "South Korea", 
+                merritS7: 45600801, 
+                merritS8: 38000000,
+                death: 2142846,
+                avatar: null
+            },
+            { 
+                id: 10137464, 
+                name: "덕배건들면쪼사뿐다", 
+                level: 41, 
+                power: 200132187, 
+                faction: "Wilderberg", 
+                roleplay: "ALL ROLEPLAY", 
+                country: "South Korea", 
+                merritS7: 29033701, 
+                merritS8: 25000000,
+                death: 1744549,
+                avatar: null
+            },
+            { 
+                id: 6539234, 
+                name: "Jokow", 
+                level: 40, 
+                power: 173026401, 
+                faction: "League of Order", 
+                roleplay: "ALL ROLEPLAY", 
+                country: "Indonesia", 
+                merritS7: 18055337, 
+                merritS8: 22000000,
+                death: 1422228,
+                avatar: null
+            }
+        ];
+
+        // Slider images
+        let sliderImages = [
+            { id: 1, url: 'https://via.placeholder.com/1200x400/333333/ffffff?text=BLACK+PEARL+Alliance' },
+            { id: 2, url: 'https://via.placeholder.com/1200x400/444444/ffffff?text=Server+539' },
+            { id: 3, url: 'https://via.placeholder.com/1200x400/555555/ffffff?text=Call+of+Dragon' }
+        ];
+
+        // Status login
+        let isLoggedIn = false;
+        let currentLanguage = 'en';
+        
+        // Translation data
+        const translations = {
+            en: {
+                home: "Home",
+                players: "Players",
+                playerStats: "Player Stats",
+                meritRank: "Merit Rank",
+                worldMap: "World Map",
+                allianceGallery: "Alliance Gallery",
+                uploadImages: "Upload Images",
+                dragDrop: "Drag & Drop to Upload",
+                maxSize: "Maximum file size: 10MB",
+                browseFiles: "Browse Files",
+                allianceStatistics: "Alliance Statistics",
+                totalPower: "Total Power",
+                totalPlayers: "Total Players",
+                totalMerit: "Total Merit",
+                meritRatio: "Merit Ratio",
+                playerGallery: "Player Gallery",
+                adminLogin: "Admin Login",
+                addNewPlayer: "Add New Player",
+                playerName: "Player Name",
+                level: "Level",
+                power: "Power",
+                faction: "Faction",
+                roleplay: "Roleplay",
+                country: "Country",
+                addPlayer: "Add Player",
+                playerList: "Player List",
+                importData: "Import Data",
+                searchPlaceholder: "Search by ID or name...",
+                search: "Search",
+                filterByCountry: "Filter by Country",
+                filterByRoleplay: "Filter by Roleplay",
+                sortBy: "Sort By",
+                player: "Player",
+                actions: "Actions",
+                individualPlayerStats: "Individual Player Statistics",
+                searchPlayerDescription: "Search for a player to view detailed statistics and performance metrics",
+                searchPlayerPlaceholder: "Enter player ID or name...",
+                searchPlayer: "Search Player",
+                meritRanking: "Merit Ranking",
+                updateMerit: "Update Merit",
+                meritDescription: "Player rankings based on merit points. Updated each season.",
+                searchMeritPlaceholder: "Search players...",
+                rank: "Rank",
+                meritS7: "Merit S7",
+                meritS8: "Merit S8",
+                playerWorldDistribution: "Player World Distribution",
+                mapDescription: "Click on a country to view players from that region",
+                playersFrom: "Players from",
+                username: "Username",
+                password: "Password",
+                login: "Login",
+                defaultLogin: "Default login:",
+                loggedInAs: "Logged in as Administrator",
+                viewDetails: "View Details",
+                importDescription: "Upload a CSV or JSON file to import player data. Existing data will be replaced.",
+                fileType: "File Type",
+                selectFile: "Select File",
+                processImport: "Process Import",
+                cancel: "Cancel",
+                csvFormat: "CSV Format",
+                csvFormatDescription: "CSV files should have the following columns: id,name,level,power,faction,roleplay,country,merritS7,merritS8,death"
+            },
+            ko: {
+                home: "홈",
+                players: "플레이어",
+                playerStats: "플레이어 통계",
+                meritRank: "메리트 순위",
+                worldMap: "월드맵",
+                allianceGallery: "연합 갤러리",
+                uploadImages: "이미지 업로드",
+                dragDrop: "드래그 앤 드롭으로 업로드",
+                maxSize: "최대 파일 크기: 10MB",
+                browseFiles: "파일 찾기",
+                allianceStatistics: "연합 통계",
+                totalPower: "총 파워",
+                totalPlayers: "총 플레이어",
+                totalMerit: "총 메리트",
+                meritRatio: "메리트 비율",
+                playerGallery: "플레이어 갤러리",
+                adminLogin: "관리자 로그인",
+                addNewPlayer: "새 플레이어 추가",
+                playerName: "플레이어 이름",
+                level: "레벨",
+                power: "파워",
+                faction: "진영",
+                roleplay: "역할",
+                country: "국가",
+                addPlayer: "플레이어 추가",
+                playerList: "플레이어 목록",
+                importData: "데이터 가져오기",
+                searchPlaceholder: "ID 또는 이름으로 검색...",
+                search: "검색",
+                filterByCountry: "국가별 필터",
+                filterByRoleplay: "역할별 필터",
+                sortBy: "정렬 기준",
+                player: "플레이어",
+                actions: "작업",
+                individualPlayerStats: "개별 플레이어 통계",
+                searchPlayerDescription: "플레이어를 검색하여 상세 통계 및 성과 지표를 확인하세요",
+                searchPlayerPlaceholder: "플레이어 ID 또는 이름 입력...",
+                searchPlayer: "플레이어 검색",
+                meritRanking: "메리트 순위",
+                updateMerit: "메리트 업데이트",
+                meritDescription: "메리트 포인트를 기준으로 한 플레이어 순위. 시즌마다 업데이트됩니다.",
+                searchMeritPlaceholder: "플레이어 검색...",
+                rank: "순위",
+                meritS7: "메리트 S7",
+                meritS8: "메리트 S8",
+                playerWorldDistribution: "플레이어 세계 분포",
+                mapDescription: "국가를 클릭하여 해당 지역의 플레이어를 확인하세요",
+                playersFrom: "플레이어 출신",
+                username: "사용자 이름",
+                password: "비밀번호",
+                login: "로그인",
+                defaultLogin: "기본 로그인:",
+                loggedInAs: "관리자로 로그인됨",
+                viewDetails: "상세 보기",
+                importDescription: "CSV 또는 JSON 파일을 업로드하여 플레이어 데이터를 가져옵니다. 기존 데이터는 교체됩니다.",
+                fileType: "파일 형식",
+                selectFile: "파일 선택",
+                processImport: "가져오기 처리",
+                cancel: "취소",
+                csvFormat: "CSV 형식",
+                csvFormatDescription: "CSV 파일에는 다음 열이 있어야 합니다: id,name,level,power,faction,roleplay,country,merritS7,merritS8,death"
+            },
+            id: {
+                home: "Beranda",
+                players: "Pemain",
+                playerStats: "Statistik Pemain",
+                meritRank: "Peringkat Merit",
+                worldMap: "Peta Dunia",
+                allianceGallery: "Galeri Aliansi",
+                uploadImages: "Unggah Gambar",
+                dragDrop: "Seret & Lepaskan untuk Mengunggah",
+                maxSize: "Ukuran file maksimum: 10MB",
+                browseFiles: "Jelajahi File",
+                allianceStatistics: "Statistik Aliansi",
+                totalPower: "Total Kekuatan",
+                totalPlayers: "Total Pemain",
+                totalMerit: "Total Merit",
+                meritRatio: "Rasio Merit",
+                playerGallery: "Galeri Pemain",
+                adminLogin: "Login Admin",
+                addNewPlayer: "Tambah Pemain Baru",
+                playerName: "Nama Pemain",
+                level: "Level",
+                power: "Kekuatan",
+                faction: "Faksi",
+                roleplay: "Roleplay",
+                country: "Negara",
+                addPlayer: "Tambah Pemain",
+                playerList: "Daftar Pemain",
+                importData: "Impor Data",
+                searchPlaceholder: "Cari berdasarkan ID atau nama...",
+                search: "Cari",
+                filterByCountry: "Filter berdasarkan Negara",
+                filterByRoleplay: "Filter berdasarkan Roleplay",
+                sortBy: "Urutkan Berdasarkan",
+                player: "Pemain",
+                actions: "Tindakan",
+                individualPlayerStats: "Statistik Pemain Individu",
+                searchPlayerDescription: "Cari pemain untuk melihat statistik detail dan metrik kinerja",
+                searchPlayerPlaceholder: "Masukkan ID atau nama pemain...",
+                searchPlayer: "Cari Pemain",
+                meritRanking: "Peringkat Merit",
+                updateMerit: "Perbarui Merit",
+                meritDescription: "Peringkat pemain berdasarkan poin merit. Diperbarui setiap musim.",
+                searchMeritPlaceholder: "Cari pemain...",
+                rank: "Peringkat",
+                meritS7: "Merit S7",
+                meritS8: "Merit S8",
+                playerWorldDistribution: "Distribusi Pemain Dunia",
+                mapDescription: "Klik pada negara untuk melihat pemain dari wilayah tersebut",
+                playersFrom: "Pemain dari",
+                username: "Nama Pengguna",
+                password: "Kata Sandi",
+                login: "Masuk",
+                defaultLogin: "Login default:",
+                loggedInAs: "Masuk sebagai Administrator",
+                viewDetails: "Lihat Detail",
+                importDescription: "Unggah file CSV atau JSON untuk mengimpor data pemain. Data yang ada akan diganti.",
+                fileType: "Jenis File",
+                selectFile: "Pilih File",
+                processImport: "Proses Impor",
+                cancel: "Batal",
+                csvFormat: "Format CSV",
+                csvFormatDescription: "File CSV harus memiliki kolom berikut: id,name,level,power,faction,roleplay,country,merritS7,merritS8,death"
+            }
+        };
+
+        // Fungsi untuk mengubah bahasa
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            document.getElementById('currentLanguage').textContent = lang.toUpperCase();
+            
+            // Terjemahkan semua elemen dengan atribut data-i18n
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+            
+            // Terjemahkan placeholder
+            document.querySelectorAll('[data-i18n-ph]').forEach(element => {
+                const key = element.getAttribute('data-i18n-ph');
+                if (translations[lang][key]) {
+                    element.placeholder = translations[lang][key];
+                }
+            });
+            
+            // Update status admin jika login
+            if (isLoggedIn) {
+                document.getElementById('adminStatus').innerHTML = `<i class="fas fa-user-shield"></i> ${translations[lang].loggedInAs}`;
+            }
+        }
+
+        // Fungsi untuk menghasilkan ID unik
+        function generateId() {
+            return players.length > 0 ? Math.max(...players.map(p => p.id)) + 1 : 1;
+        }
+
+        // Fungsi untuk mendapatkan inisial nama
+        function getInitials(name) {
+            return name.split(' ').map(word => word[0]).join('').toUpperCase();
+        }
+
+        // Fungsi untuk mendapatkan kode flag emoji dari nama negara
+        function getCountryFlag(country) {
+            const flagMap = {
+                'Indonesia': '🇮🇩',
+                'South Korea': '🇰🇷',
+                'Thailand': '🇹🇭',
+                'Japan': '🇯🇵',
+                'USA': '🇺🇸',
+                'Vietnam': '🇻🇳',
+                'Belarus': '🇧🇾',
+                'Cuba': '🇨🇺',
+                'Philippines': '🇵🇭',
+                'Portugal': '🇵🇹',
+                'South Africa': '🇿🇦',
+                'Singapore': '🇸🇬',
+                'Russia': '🇷🇺',
+                'Unknown': '🌍'
+            };
+            
+            return flagMap[country] || '🌍';
+        }
+
+        // Fungsi untuk menampilkan pemain di tabel
+        function renderPlayers() {
+            const playersList = document.getElementById('playersList');
+            playersList.innerHTML = '';
+            
+            // Filter dan sortir data
+            let filteredPlayers = [...players];
+            
+            // Filter berdasarkan pencarian
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            if (searchTerm) {
+                filteredPlayers = filteredPlayers.filter(player => 
+                    player.id.toString().includes(searchTerm) ||
+                    player.name.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Filter berdasarkan negara
+            const countryFilter = document.getElementById('countryFilter').value;
+            if (countryFilter) {
+                filteredPlayers = filteredPlayers.filter(player => player.country === countryFilter);
+            }
+            
+            // Filter berdasarkan roleplay
+            const roleplayFilter = document.getElementById('roleplayFilter').value;
+            if (roleplayFilter) {
+                filteredPlayers = filteredPlayers.filter(player => player.roleplay === roleplayFilter);
+            }
+            
+            // Sortir data
+            const sortBy = document.getElementById('sortBy').value;
+            filteredPlayers.sort((a, b) => {
+                switch(sortBy) {
+                    case 'power': return b.power - a.power;
+                    case 'level': return b.level - a.level;
+                    case 'name': return a.name.localeCompare(b.name);
+                    default: return 0;
+                }
+            });
+            
+            // Render setiap pemain
+            filteredPlayers.forEach(player => {
+                const row = document.createElement('tr');
+                
+                // Tentukan tombol aksi berdasarkan status login
+                let actionButtons = '';
+                if (isLoggedIn) {
+                    actionButtons = `
+                        <td class="actions">
+                            <button class="btn-secondary" onclick="editPlayer(${player.id})">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn-danger" onclick="deletePlayer(${player.id})">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </td>
+                    `;
+                }
+                
+                row.innerHTML = `
+                    <td>
+                        <div class="player-row">
+                            <div class="player-avatar">
+                                ${player.avatar ? `<img src="${player.avatar}" alt="${player.name}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">` : getInitials(player.name)}
+                            </div>
+                            <div>${player.name}</div>
+                        </div>
+                    </td>
+                    <td>${player.level}</td>
+                    <td>${player.power.toLocaleString()}</td>
+                    <td>${player.faction}</td>
+                    <td>${player.roleplay}</td>
+                    <td>
+                        <span class="country-flag">${getCountryFlag(player.country)}</span>
+                        ${player.country}
+                    </td>
+                    ${actionButtons}
+                `;
+                playersList.appendChild(row);
+            });
+            
+            // Tampilkan/sembunyikan header aksi berdasarkan status login
+            document.getElementById('actionsHeader').style.display = isLoggedIn ? 'table-cell' : 'none';
+            
+            updateStats();
+            updateGallery();
+            updateMeritList();
+            updateCountryFilter();
+        }
+
+        // Fungsi untuk memperbarui galeri pemain
+        function updateGallery() {
+            const playerGallery = document.getElementById('playerGallery');
+            playerGallery.innerHTML = '';
+            
+            // Tampilkan semua pemain di galeri
+            players.forEach(player => {
+                const card = document.createElement('div');
+                card.className = 'gallery-item';
+                card.onclick = () => showPlayerDetail(player.id);
+                
+                card.innerHTML = `
+                    <div class="gallery-image" style="background: ${player.avatar ? `url('${player.avatar}') center/cover` : 'var(--secondary)'};">
+                        ${!player.avatar ? `<i class="fas fa-user" style="font-size: 3rem; color: var(--text-secondary);"></i>` : ''}
+                    </div>
+                    <div class="gallery-info">
+                        <div class="gallery-name">${player.name}</div>
+                        <div class="gallery-details">
+                            <span>${player.power.toLocaleString()} Power</span>
+                            <span>${player.faction}</span>
+                        </div>
+                    </div>
+                `;
+                playerGallery.appendChild(card);
+            });
+        }
+
+        // Fungsi untuk memperbarui daftar merit
+        function updateMeritList() {
+            const meritList = document.getElementById('meritList');
+            meritList.innerHTML = '';
+            
+            // Buat salinan pemain dan urutkan berdasarkan total merit
+            const sortedPlayers = [...players].sort((a, b) => {
+                const totalA = (a.merritS7 || 0) + (a.merritS8 || 0);
+                const totalB = (b.merritS7 || 0) + (b.merritS8 || 0);
+                return totalB - totalA;
+            });
+            
+            // Render setiap pemain di tabel merit
+            sortedPlayers.forEach((player, index) => {
+                const row = document.createElement('tr');
+                const totalMerit = (player.merritS7 || 0) + (player.merritS8 || 0);
+                
+                // Tentukan tombol aksi berdasarkan status login
+                let actionButtons = '';
+                if (isLoggedIn) {
+                    actionButtons = `
+                        <td class="actions">
+                            <button class="btn-secondary" onclick="editMerit(${player.id})">
+                                <i class="fas fa-edit"></i> Update
+                            </button>
+                        </td>
+                    `;
+                }
+                
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>
+                        <div class="player-row">
+                            <div class="player-avatar">
+                                ${player.avatar ? `<img src="${player.avatar}" alt="${player.name}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">` : getInitials(player.name)}
+                            </div>
+                            <div>${player.name}</div>
+                        </div>
+                    </td>
+                    <td>${(player.merritS7 || 0).toLocaleString()}</td>
+                    <td>${(player.merritS8 || 0).toLocaleString()}</td>
+                    <td>${totalMerit.toLocaleString()}</td>
+                    ${actionButtons}
+                `;
+                meritList.appendChild(row);
+            });
+            
+            // Tampilkan/sembunyikan header aksi berdasarkan status login
+            document.getElementById('meritActionsHeader').style.display = isLoggedIn ? 'table-cell' : 'none';
+            document.getElementById('updateMeritBtn').style.display = isLoggedIn ? 'inline-flex' : 'none';
+        }
+
+        // Fungsi untuk memperbarui statistik
+        function updateStats() {
+            const totalPower = players.reduce((sum, player) => sum + player.power, 0);
+            document.getElementById('totalPower').textContent = (totalPower / 1000000).toFixed(1) + 'M';
+            
+            document.getElementById('totalPlayers').textContent = players.length;
+            
+            const totalMerit = players.reduce((sum, player) => sum + (player.merritS7 || 0) + (player.merritS8 || 0), 0);
+            document.getElementById('totalMerit').textContent = (totalMerit / 1000000).toFixed(1) + 'M';
+            
+            const meritRatio = totalPower > 0 ? ((totalMerit / totalPower) * 100).toFixed(1) : 0;
+            document.getElementById('meritRatio').textContent = meritRatio + '%';
+            
+            // Tampilkan statistik player teratas di tab stats
+            showTopPlayerStats();
+        }
+
+        // Fungsi untuk menampilkan statistik player teratas
+        function showTopPlayerStats() {
+            const topPlayer = players.reduce((prev, current) => (prev.power > current.power) ? prev : current);
+            showPlayerStats(topPlayer, true);
+        }
+
+        // Fungsi untuk menampilkan detail pemain
+        function showPlayerDetail(playerId) {
+            const player = players.find(p => p.id === playerId);
+            if (!player) return;
+            
+            const totalMerit = (player.merritS7 || 0) + (player.merritS8 || 0);
+            const meritRatio = player.power > 0 ? ((totalMerit / player.power) * 100).toFixed(1) : 0;
+            
+            const playerDetailHTML = `
+                <div class="player-detail-header">
+                    <div class="player-detail-avatar">
+                        ${player.avatar ? `<img src="${player.avatar}" alt="${player.name}">` : getInitials(player.name)}
+                    </div>
+                    <div class="player-detail-info">
+                        <div class="player-detail-name">${player.name}</div>
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <span style="background: var(--primary); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">${player.faction}</span>
+                            <span style="background: var(--primary); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">${player.roleplay}</span>
+                            <span style="display: flex; align-items: center;">
+                                <span class="country-flag">${getCountryFlag(player.country)}</span>
+                                ${player.country}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="player-detail-stats">
+                    <div class="player-detail-stat">
+                        <div class="player-detail-stat-value">${player.power.toLocaleString()}</div>
+                        <div class="player-detail-stat-label">Power</div>
+                    </div>
+                    <div class="player-detail-stat">
+                        <div class="player-detail-stat-value">${totalMerit.toLocaleString()}</div>
+                        <div class="player-detail-stat-label">Total Merit</div>
+                    </div>
+                    <div class="player-detail-stat">
+                        <div class="player-detail-stat-value">${meritRatio}%</div>
+                        <div class="player-detail-stat-label">Merit Ratio</div>
+                    </div>
+                    <div class="player-detail-stat">
+                        <div class="player-detail-stat-value">${player.death.toLocaleString()}</div>
+                        <div class="player-detail-stat-label">Death</div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 1.5rem;">
+                    <h3>Merit Breakdown</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                        <div style="background: var(--primary); padding: 1rem; border-radius: 8px;">
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Merit S7</div>
+                            <div style="font-size: 1.25rem; font-weight: 600;">${(player.merritS7 || 0).toLocaleString()}</div>
+                        </div>
+                        <div style="background: var(--primary); padding: 1rem; border-radius: 8px;">
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Merit S8</div>
+                            <div style="font-size: 1.25rem; font-weight: 600;">${(player.merritS8 || 0).toLocaleString()}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                ${isLoggedIn ? `
+                <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+                    <button class="btn-secondary" onclick="uploadPlayerAvatar(${player.id})">
+                        <i class="fas fa-upload"></i> Upload Avatar
+                    </button>
+                    <input type="file" id="avatarUpload-${player.id}" accept="image/*" style="display: none;" onchange="handleAvatarUpload(${player.id}, this.files)">
+                </div>
+                ` : ''}
+            `;
+            
+            document.getElementById('playerDetailContent').innerHTML = playerDetailHTML;
+            document.getElementById('playerDetailModal').style.display = 'flex';
+        }
+
+        // Fungsi untuk menampilkan statistik pemain di tab stats
+        function showPlayerStats(player, isDefault = false) {
+            const totalMerit = (player.merritS7 || 0) + (player.merritS8 || 0);
+            const meritRatio = player.power > 0 ? ((totalMerit / player.power) * 100).toFixed(1) : 0;
+            
+            const playerStatsHTML = `
+                <div class="player-stats-container">
+                    <div class="player-detail">
+                        <div class="player-detail-header">
+                            <div class="player-detail-avatar">
+                                ${player.avatar ? `<img src="${player.avatar}" alt="${player.name}">` : getInitials(player.name)}
+                            </div>
+                            <div class="player-detail-info">
+                                <div class="player-detail-name">${player.name}</div>
+                                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                                    <span style="background: var(--primary); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">${player.faction}</span>
+                                    <span style="background: var(--primary); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem;">${player.roleplay}</span>
+                                    <span style="display: flex; align-items: center;">
+                                        <span class="country-flag">${getCountryFlag(player.country)}</span>
+                                        ${player.country}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="player-detail-stats">
+                            <div class="player-detail-stat">
+                                <div class="player-detail-stat-value">${player.power.toLocaleString()}</div>
+                                <div class="player-detail-stat-label">Power</div>
+                            </div>
+                            <div class="player-detail-stat">
+                                <div class="player-detail-stat-value">${totalMerit.toLocaleString()}</div>
+                                <div class="player-detail-stat-label">Total Merit</div>
+                            </div>
+                            <div class="player-detail-stat">
+                                <div class="player-detail-stat-value">${meritRatio}%</div>
+                                <div class="player-detail-stat-label">Merit Ratio</div>
+                            </div>
+                            <div class="player-detail-stat">
+                                <div class="player-detail-stat-value">${player.death.toLocaleString()}</div>
+                                <div class="player-detail-stat-label">Death</div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 1.5rem;">
+                            <h3>Merit Breakdown</h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                                <div style="background: var(--primary); padding: 1rem; border-radius: 8px;">
+                                    <div style="font-size: 0.875rem; color: var(--text-secondary);">Merit S7</div>
+                                    <div style="font-size: 1.25rem; font-weight: 600;">${(player.merritS7 || 0).toLocaleString()}</div>
+                                </div>
+                                <div style="background: var(--primary); padding: 1rem; border-radius: 8px;">
+                                    <div style="font-size: 0.875rem; color: var(--text-secondary);">Merit S8</div>
+                                    <div style="font-size: 1.25rem; font-weight: 600;">${(player.merritS8 || 0).toLocaleString()}</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        ${!isDefault ? `
+                        <div style="margin-top: 1.5rem;">
+                            <button class="btn-secondary" onclick="showPlayerDetail(${player.id})">
+                                <i class="fas fa-eye"></i> View Full Details
+                            </button>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('playerStats').innerHTML = playerStatsHTML;
+        }
+
+        // Fungsi untuk memperbarui filter negara
+        function updateCountryFilter() {
+            const countryFilter = document.getElementById('countryFilter');
+            const countries = [...new Set(players.map(player => player.country))];
+            
+            // Hapus opsi selain "All Countries"
+            while (countryFilter.children.length > 1) {
+                countryFilter.removeChild(countryFilter.lastChild);
+            }
+            
+            // Tambahkan opsi negara
+            countries.forEach(country => {
+                const option = document.createElement('option');
+                option.value = country;
+                option.textContent = country;
+                countryFilter.appendChild(option);
+            });
+        }
+
+        // Fungsi untuk menginisialisasi slider
+        function initSlider() {
+            const slider = document.getElementById('imageSlider');
+            const sliderNav = document.getElementById('sliderNav');
+            
+            // Kosongkan slider dan navigasi
+            slider.innerHTML = '';
+            sliderNav.innerHTML = '';
+            
+            // Tambahkan slide
+            sliderImages.forEach((image, index) => {
+                const slide = document.createElement('div');
+                slide.className = 'slide';
+                slide.style.backgroundImage = `url('${image.url}')`;
+                slider.appendChild(slide);
+                
+                // Tambahkan dot navigasi
+                const dot = document.createElement('div');
+                dot.className = 'slider-dot' + (index === 0 ? ' active' : '');
+                dot.onclick = () => goToSlide(index);
+                sliderNav.appendChild(dot);
+            });
+            
+            // Mulai auto slide
+            startAutoSlide();
+        }
+
+        // Fungsi untuk pergi ke slide tertentu
+        function goToSlide(index) {
+            const slider = document.getElementById('imageSlider');
+            slider.style.transform = `translateX(-${index * 100}%)`;
+            
+            // Perbarui dot aktif
+            document.querySelectorAll('.slider-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+            
+            currentSlide = index;
+        }
+
+        // Variabel untuk auto slide
+        let currentSlide = 0;
+        let slideInterval;
+
+        // Fungsi untuk memulai auto slide
+        function startAutoSlide() {
+            clearInterval(slideInterval);
+            slideInterval = setInterval(() => {
+                currentSlide = (currentSlide + 1) % sliderImages.length;
+                goToSlide(currentSlide);
+            }, 5000);
+        }
+
+        // Fungsi untuk menambah pemain baru
+        function addPlayer(event) {
+            event.preventDefault();
+            
+            const newPlayer = {
+                id: generateId(),
+                name: document.getElementById('playerName').value,
+                level: parseInt(document.getElementById('playerLevel').value),
+                power: parseInt(document.getElementById('playerPower').value),
+                faction: document.getElementById('playerFaction').value,
+                roleplay: document.getElementById('playerRoleplay').value,
+                country: document.getElementById('playerCountry').value,
+                merritS7: 0,
+                merritS8: 0,
+                death: 0,
+                avatar: null
+            };
+            
+            players.push(newPlayer);
+            renderPlayers();
+            
+            // Reset form
+            document.getElementById('playerForm').reset();
+            
+            // Tampilkan pesan sukses
+            alert(`Player ${newPlayer.name} successfully added!`);
+        }
+
+        // Fungsi untuk login
+        function login(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Validasi login sederhana
+            if (username === 'admin' && password === 'blackpearl539') {
+                isLoggedIn = true;
+                document.getElementById('loginModal').style.display = 'none';
+                document.getElementById('adminStatus').style.display = 'block';
+                document.getElementById('playerFormContainer').classList.add('admin-visible');
+                document.getElementById('importBtn').style.display = 'inline-flex';
+                document.getElementById('sliderUploadBtn').style.display = 'inline-flex';
+                document.getElementById('loginForm').reset();
+                
+                // Update teks status admin
+                document.getElementById('adminStatus').innerHTML = `<i class="fas fa-user-shield"></i> ${translations[currentLanguage].loggedInAs}`;
+                
+                // Render ulang untuk menampilkan tombol edit/hapus
+                renderPlayers();
+                
+                alert('Login successful! You can now edit player data.');
+            } else {
+                alert('Incorrect username or password!');
+            }
+        }
+
+        // Fungsi untuk logout
+        function logout() {
+            isLoggedIn = false;
+            document.getElementById('adminStatus').style.display = 'none';
+            document.getElementById('playerFormContainer').classList.remove('admin-visible');
+            document.getElementById('importBtn').style.display = 'none';
+            document.getElementById('sliderUploadBtn').style.display = 'none';
+            
+            // Render ulang untuk menyembunyikan tombol edit/hapus
+            renderPlayers();
+            
+            alert('You have been logged out. Read-only mode.');
+        }
+
+        // Fungsi untuk mengimpor data
+        function importData() {
+            document.getElementById('importModal').style.display = 'flex';
+        }
+
+        // Fungsi untuk memproses impor data
+        function processImport() {
+            const fileInput = document.getElementById('importFile');
+            const fileType = document.getElementById('importFileType').value;
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Please select a file to import.');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const content = e.target.result;
+                    let importedPlayers = [];
+                    
+                    if (fileType === 'csv') {
+                        importedPlayers = parseCSV(content);
+                    } else if (fileType === 'json') {
+                        importedPlayers = JSON.parse(content);
+                    }
+                    
+                    // Validasi data
+                    if (!Array.isArray(importedPlayers)) {
+                        throw new Error('Invalid data format. Expected an array of players.');
+                    }
+                    
+                    // Validasi setiap pemain
+                    importedPlayers.forEach(player => {
+                        if (!player.id || !player.name || !player.level || !player.power) {
+                            throw new Error('Invalid player data. Each player must have id, name, level, and power.');
+                        }
+                    });
+                    
+                    // Ganti data pemain dengan data yang diimpor
+                    players = importedPlayers;
+                    renderPlayers();
+                    document.getElementById('importModal').style.display = 'none';
+                    alert('Data imported successfully!');
+                    
+                } catch (error) {
+                    alert('Error importing data: ' + error.message);
+                }
+            };
+            
+            reader.readAsText(file);
+        }
+
+        // Fungsi untuk mem-parsing CSV
+        function parseCSV(csvText) {
+            const lines = csvText.split('\n');
+            const headers = lines[0].split(',').map(header => header.trim());
+            
+            const results = [];
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                const values = line.split(',').map(value => value.trim());
+                const player = {};
+                
+                headers.forEach((header, index) => {
+                    if (values[index]) {
+                        // Konversi nilai numerik
+                        if (['id', 'level', 'power', 'merritS7', 'merritS8', 'death'].includes(header)) {
+                            player[header] = parseInt(values[index]) || 0;
+                        } else {
+                            player[header] = values[index];
+                        }
+                    }
+                });
+                
+                // Pastikan ada field avatar
+                if (!player.avatar) {
+                    player.avatar = null;
+                }
+                
+                results.push(player);
+            }
+            
+            return results;
+        }
+
+        // Fungsi untuk mencari pemain di tab stats
+        function searchPlayer() {
+            const searchTerm = document.getElementById('playerSearch').value.toLowerCase().trim();
+            if (!searchTerm) {
+                alert('Please enter a player ID or name to search.');
+                return;
+            }
+            
+            // Cari pemain berdasarkan ID atau nama
+            const player = players.find(p => 
+                p.id.toString() === searchTerm || 
+                p.name.toLowerCase().includes(searchTerm)
+            );
+            
+            if (player) {
+                showPlayerStats(player);
+            } else {
+                alert('Player not found!');
+            }
+        }
+
+        // Fungsi untuk mengunggah avatar pemain
+        function uploadPlayerAvatar(playerId) {
+            document.getElementById(`avatarUpload-${playerId}`).click();
+        }
+
+        // Fungsi untuk menangani unggahan avatar
+        function handleAvatarUpload(playerId, files) {
+            if (files.length === 0) return;
+            
+            const file = files[0];
+            if (file.size > 10 * 1024 * 1024) {
+                alert('File size must be less than 10MB');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const playerIndex = players.findIndex(p => p.id === playerId);
+                if (playerIndex !== -1) {
+                    players[playerIndex].avatar = e.target.result;
+                    renderPlayers();
+                    alert('Avatar updated successfully!');
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Fungsi untuk mengunggah gambar slider
+        function handleSliderUpload(files) {
+            if (files.length === 0) return;
+            
+            Array.from(files).forEach(file => {
+                if (file.size > 10 * 1024 * 1024) {
+                    alert(`File ${file.name} is too large. Maximum size is 10MB.`);
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    sliderImages.push({
+                        id: Date.now(),
+                        url: e.target.result
+                    });
+                    initSlider();
+                };
+                reader.readAsDataURL(file);
+            });
+            
+            document.getElementById('uploadArea').style.display = 'none';
+            alert('Images uploaded successfully!');
+        }
+
+        // Inisialisasi event listeners saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inisialisasi bahasa
+            changeLanguage('en');
+            
+            // Render data awal
+            renderPlayers();
+            initSlider();
+            
+            // Event listener untuk form tambah pemain
+            document.getElementById('playerForm').addEventListener('submit', addPlayer);
+            
+            // Event listener untuk pencarian
+            document.getElementById('searchBtn').addEventListener('click', renderPlayers);
+            document.getElementById('searchInput').addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    renderPlayers();
+                }
+            });
+            
+            // Event listener untuk filter
+            document.getElementById('countryFilter').addEventListener('change', renderPlayers);
+            document.getElementById('roleplayFilter').addEventListener('change', renderPlayers);
+            document.getElementById('sortBy').addEventListener('change', renderPlayers);
+            
+            // Event listener untuk login
+            document.getElementById('loginForm').addEventListener('submit', login);
+            document.getElementById('closeLoginModal').addEventListener('click', function() {
+                document.getElementById('loginModal').style.display = 'none';
+            });
+            document.getElementById('cancelLogin').addEventListener('click', function() {
+                document.getElementById('loginModal').style.display = 'none';
+            });
+            document.getElementById('loginBtn').addEventListener('click', function() {
+                document.getElementById('loginModal').style.display = 'flex';
+            });
+            
+            // Event listener untuk logout
+            document.getElementById('adminStatus').addEventListener('click', logout);
+            
+            // Event listener untuk impor data
+            document.getElementById('importBtn').addEventListener('click', importData);
+            document.getElementById('processImportBtn').addEventListener('click', processImport);
+            document.getElementById('closeImportModal').addEventListener('click', function() {
+                document.getElementById('importModal').style.display = 'none';
+            });
+            document.getElementById('cancelImportBtn').addEventListener('click', function() {
+                document.getElementById('importModal').style.display = 'none';
+            });
+            
+            // Event listener untuk tab
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    
+                    // Sembunyikan semua tab content
+                    document.querySelectorAll('.tab-content').forEach(tab => {
+                        tab.classList.remove('active');
+                    });
+                    
+                    // Tampilkan tab yang dipilih
+                    document.getElementById(tabName).classList.add('active');
+                    
+                    // Update tab aktif
+                    document.querySelectorAll('.tab').forEach(tab => {
+                        tab.classList.remove('active');
+                    });
+                    
+                    this.classList.add('active');
+                    
+                    // Jika tab stats dipilih, tampilkan player teratas
+                    if (tabName === 'stats') {
+                        showTopPlayerStats();
+                    }
+                });
+            });
+            
+            // Event listener untuk pencarian pemain di tab stats
+            document.getElementById('searchPlayerBtn').addEventListener('click', searchPlayer);
+            document.getElementById('playerSearch').addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    searchPlayer();
+                }
+            });
+            
+            // Event listener untuk pencarian merit
+            document.getElementById('meritSearchBtn').addEventListener('click', updateMeritList);
+            document.getElementById('meritSearch').addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    updateMeritList();
+                }
+            });
+            
+            // Event listener untuk upload slider
+            document.getElementById('sliderUploadBtn').addEventListener('click', function() {
+                document.getElementById('uploadArea').style.display = 'block';
+            });
+            
+            document.getElementById('browseFilesBtn').addEventListener('click', function() {
+                document.getElementById('fileInput').click();
+            });
+            
+            document.getElementById('fileInput').addEventListener('change', function() {
+                handleSliderUpload(this.files);
+            });
+            
+            // Drag and drop untuk upload area
+            const uploadArea = document.getElementById('uploadArea');
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', function() {
+                this.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+                handleSliderUpload(e.dataTransfer.files);
+            });
+            
+            // Event listener untuk tutup modal player detail
+            document.getElementById('closePlayerDetailModal').addEventListener('click', function() {
+                document.getElementById('playerDetailModal').style.display = 'none';
+            });
+            
+            // Event listener untuk ganti bahasa
+            document.getElementById('languageBtn').addEventListener('click', function() {
+                const languages = ['en', 'ko', 'id'];
+                const currentIndex = languages.indexOf(currentLanguage);
+                const nextIndex = (currentIndex + 1) % languages.length;
+                changeLanguage(languages[nextIndex]);
+            });
+            
+            // Inisialisasi peta (placeholder - akan diimplementasikan dengan Google Maps API)
+            const mapContainer = document.getElementById('map');
+            mapContainer.innerHTML = `
+                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--secondary);">
+                    <div style="text-align: center;">
+                        <i class="fas fa-map-marked-alt" style="font-size: 3rem; color: var(--text-secondary); margin-bottom: 1rem;"></i>
+                        <h3>Google Maps Integration</h3>
+                        <p>Map will be integrated with Google Maps API</p>
+                    </div>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
